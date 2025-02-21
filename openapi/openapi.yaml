@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Government Structure GraphQL API
+  description: GraphQL API for retrieving government structures based on dates
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000/graphql
+    description: Local GraphQL server
+
+paths:
+  /graphql:
+    post:
+      summary: Execute GraphQL queries
+      description: Use this endpoint to execute GraphQL queries, such as retrieving the government structure based on a specific date.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  example: |
+                    query {
+                      govStrucByDate(date: "2023-01-01") {
+                        name
+                        ministers {
+                          name
+                          departments {
+                            name
+                          }
+                        }
+                      }
+                    }
+      responses:
+        "200":
+          description: GraphQL response with the queried data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      govStrucByDate:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            ministers:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  departments:
+                                    type: array
+                                    items:
+                                      type: object
+                                      properties:
+                                        name:
+                                          type: string
+        "400":
+          description: Invalid GraphQL query
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    GovernmentType:
+      type: object
+      properties:
+        name:
+          type: string
+        ministers:
+          type: array
+          items:
+            $ref: '#/components/schemas/MinisterType'
+    MinisterType:
+      type: object
+      properties:
+        name:
+          type: string
+        departments:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepartmentType'
+    DepartmentType:
+      type: object
+      properties:
+        name:
+          type: string
