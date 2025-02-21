@@ -1,0 +1,13 @@
+flask
+flask-cors
+
+neo4j
+graphene==2.1.9
+
+graphql-core<3,>=2.3
+flask-graphql==2.0.1
+graphql-server-core==1.2.0
+python-dotenv
+
+
+
