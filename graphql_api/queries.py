@@ -17,9 +17,10 @@ class Query(graphene.ObjectType):
 
     def resolve_govStrucByDate(self, info, date):
         query = """
-        MATCH (g:government)-[r:HAS_MINISTER]->(m:minister)-[y:HAS_DEPARTMENT]->(d:department)
-        WHERE (r.start_date <= date($date) AND (r.end_date IS NULL OR r.end_date > date($date)))
-          AND (y.start_date <= date($date) AND (y.end_date IS NULL OR y.end_date > date($date)))
+        MATCH (g:government)-[r:GOVERNS]->(m:minister)-[y:GOVERNS]->(d:department)
+        WHERE (r.type = "AS_MINISTER") AND (y.type= "AS_DEPARTMENT")
+        AND (r.start_date <= date($date) AND (r.end_date IS NULL OR r.end_date > date($date)))
+        AND (y.start_date <= date($date) AND (y.end_date IS NULL OR y.end_date > date($date)))
         RETURN g.name AS government, m.name AS minister, d.name AS department
         """
 
